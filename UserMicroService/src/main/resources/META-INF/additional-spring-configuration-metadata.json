@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "spring.datasource.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.jdbc-url'"
+  },
+  {
+    "name": "spring.datasource.pool-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.pool-name'"
+  },
+  {
+    "name": "spring.datasource.connection-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.connection-timeout'"
+  },
+  {
+    "name": "spring.datasource.idle-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.idle-timeout'"
+  },
+  {
+    "name": "spring.datasource.minimum-idle",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.minimum-idle'"
+  },
+  {
+    "name": "spring.datasource.connection-test-query",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.connection-test-query'"
+  },
+  {
+    "name": "spring.datasource.maximum-pool-size",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.maximum-pool-size'"
+  }
+]}
