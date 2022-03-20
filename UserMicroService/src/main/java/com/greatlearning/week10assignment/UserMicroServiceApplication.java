@@ -1,6 +1,8 @@
 package com.greatlearning.week10assignment;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,8 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.greatlearning.week10assignment.exception.MailAlreadyExistsException;
 import com.greatlearning.week10assignment.model.Item;
+import com.greatlearning.week10assignment.model.OrdersView;
 import com.greatlearning.week10assignment.model.Role;
 import com.greatlearning.week10assignment.model.User;
+import com.greatlearning.week10assignment.repository.OrderViewRepository;
 import com.greatlearning.week10assignment.service.ItemService;
 import com.greatlearning.week10assignment.service.UserService;
 
@@ -36,6 +40,9 @@ public class UserMicroServiceApplication implements CommandLineRunner{
 
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	OrderViewRepository orderViewRepository;
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
@@ -45,6 +52,9 @@ public class UserMicroServiceApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		// Creating one sample User and Admin User
+//		
+//		Optional<OrdersView> views =  orderViewRepository.findById(1L);
+//		System.out.println(views);
 
 		User adminUser = User.builder().email("admin@gmail.com").firstName("admin").lastName("last")
 				.password(bCryptPasswordEncoder.encode("admin"))

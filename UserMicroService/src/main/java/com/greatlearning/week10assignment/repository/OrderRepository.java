@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.greatlearning.week10assignment.model.Order;
 import com.greatlearning.week10assignment.model.OrderItemPK;
+import com.greatlearning.week10assignment.model.OrdersView;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, OrderItemPK> {

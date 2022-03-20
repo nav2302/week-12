@@ -1,12 +1,15 @@
 package com.greatlearning.week10assignment.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,7 +32,9 @@ import com.greatlearning.week10assignment.model.Order;
 import com.greatlearning.week10assignment.model.OrderBillWrapper;
 import com.greatlearning.week10assignment.model.OrderItem;
 import com.greatlearning.week10assignment.model.OrderItemDto;
+import com.greatlearning.week10assignment.model.OrdersView;
 import com.greatlearning.week10assignment.model.User;
+import com.greatlearning.week10assignment.repository.OrderViewRepository;
 import com.greatlearning.week10assignment.response.ItemResponse;
 import com.greatlearning.week10assignment.service.ItemService;
 import com.greatlearning.week10assignment.service.OrderItemService;
@@ -53,6 +59,53 @@ public class OrderController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	OrderViewRepository orderViewRepository;
+	
+	
+	
+	/*
+	 * START
+	 * Code for WEEK-11 assignment see all orders using views and filter using views of SQL
+	 * */
+	
+	@GetMapping
+	public ResponseEntity<Iterable<OrdersView>> getAllOrdersForCurrentLoggedInUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findByEmail(auth.getName());
+		List<OrdersView> orderViews = orderViewRepository.findAllByEmail(user.getEmail());
+		return new ResponseEntity<>(orderViews, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/filterDate")
+	public ResponseEntity<Iterable<OrdersView>> getAllOrderFilteringDate(@RequestParam(name = "date", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findByEmail(auth.getName());
+		LocalDate date = fromDate.toInstant()
+			      .atZone(ZoneId.systemDefault())
+			      .toLocalDate();
+		List<OrdersView> orderViews = orderViewRepository.findAllByEmailAndDateCreated(user.getEmail(), date);
+		return new ResponseEntity<>(orderViews, HttpStatus.OK);
+	}
+	
+	@GetMapping("/filterPrice")
+	public ResponseEntity<Iterable<OrdersView>> getAllOrderFilteringDate(@RequestParam(name = "price", required = true) Double price){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findByEmail(auth.getName());
+		List<OrdersView> orderViews = orderViewRepository.findAllByEmailAndPrice(user.getEmail(), price);
+		return new ResponseEntity<>(orderViews, HttpStatus.OK);
+	}
+	
+	
+	
+	/*
+	 * END 
+	 * Code for WEEK-11 assignment see all orders using views and filter using views of SQL -- view name  - ALL_ORDERS_FOR_CURRENT_USER
+	 * */
+	
+	
 
 	@PostMapping
 	@Transactional
@@ -89,21 +142,6 @@ public class OrderController {
 		});
 
 		return new ResponseEntity<>(OrderBillWrapper.builder().bill(order.getTotalOrderPrice()).items(items).build(), headers, HttpStatus.CREATED);
-	}
-
-	@GetMapping
-	public ResponseEntity<OrderBillWrapper> getAllOrdersForCurrentLoggedInUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userService.findByEmail(auth.getName());
-		List<Order> orderList = Optional.ofNullable(user.getOrders()).orElse(null);
-		Double totalBill = orderList.stream().mapToDouble(Order::getTotalOrderPrice).sum();
-
-		List<ItemResponse> items = new ArrayList<>();
-		orderList.stream().forEach(order -> order.getOrderItems().forEach(orderItem -> {
-			Item item = orderItem.getItem();
-			items.add(ItemResponse.builder().name(item.getName()).price(item.getPrice()).quantity(orderItem.getQuantity()).build());
-		}));
-		return new ResponseEntity<>(OrderBillWrapper.builder().bill(totalBill).items(items).build(), HttpStatus.OK);
 	}
 
 	public static class OrderForm {

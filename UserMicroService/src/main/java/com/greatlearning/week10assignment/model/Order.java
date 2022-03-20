@@ -41,6 +41,7 @@ public class Order {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
+	
 
 	public Order() {
 	}
@@ -121,5 +122,7 @@ public class Order {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	
 
 }
