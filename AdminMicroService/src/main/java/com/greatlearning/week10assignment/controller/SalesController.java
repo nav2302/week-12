@@ -15,8 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.greatlearning.week10assignment.config.SwaggerConfig;
 import com.greatlearning.week10assignment.model.Item;
+import com.greatlearning.week10assignment.model.MaxSalesMonthView;
+import com.greatlearning.week10assignment.model.MonthlySaleLastYear;
 import com.greatlearning.week10assignment.model.Order;
 import com.greatlearning.week10assignment.model.OrderBillWrapper;
+import com.greatlearning.week10assignment.model.SalesByCitiesView;
+import com.greatlearning.week10assignment.repository.MaxSalesMonthRepository;
+import com.greatlearning.week10assignment.repository.MonthlySalesLastYearRepository;
+import com.greatlearning.week10assignment.repository.SalesByCitiesRepository;
 import com.greatlearning.week10assignment.response.ItemResponse;
 import com.greatlearning.week10assignment.service.OrderService;
 
@@ -31,7 +37,47 @@ public class SalesController {
 
 	@Autowired
 	OrderService orderService;
-
+	
+	@Autowired
+	SalesByCitiesRepository salesByCitiesRepository;
+	
+	@Autowired
+	MaxSalesMonthRepository maxSalesMonthRepository;
+	
+	@Autowired
+	MonthlySalesLastYearRepository monthlySalesLastYearRepository;
+	
+	/*
+	 * START
+	 * Code for WEEK-11 assignment 
+	 * */
+	
+	
+	
+	@GetMapping(value = "/sales/citywise")
+	public ResponseEntity<Iterable<SalesByCitiesView>> getSalesByCities() {
+		
+		return new ResponseEntity<>(salesByCitiesRepository.findAll(), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/sales/maxSalesInMonth")
+	public ResponseEntity<Iterable<MaxSalesMonthView>> getSalesByMonth() {
+		
+		return new ResponseEntity<>(maxSalesMonthRepository.findAll(), HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value = "/sales/monthlySalesLastYear")
+	public ResponseEntity<Iterable<MonthlySaleLastYear>> getSalesMonthlyLastYear() {
+		
+		return new ResponseEntity<>(monthlySalesLastYearRepository.findAll(), HttpStatus.OK);
+	}
+	
+	
+	/*
+	 * END
+	 * Code for WEEK-11 assignment 
+	 * */
 	@GetMapping(value = "/bills")
 	public ResponseEntity<OrderBillWrapper> getAllOrdersForToday() {
 
