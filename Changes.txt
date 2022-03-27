@@ -1,0 +1,22 @@
+Services added inside service package:
+ProducerService
+ConsumerService
+
+Controller added inside Controller package:
+ChatController
+
+Step1: Install kafka
+Step2: Run the below commands
+
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties 
+
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+
+Step3: Create the below topics:
+
+.\bin\windows\kafka-topics.bat --create --topic userToAdminTopic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+.\bin\windows\kafka-topics.bat --create --topic userToUserTopic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+.\bin\windows\kafka-topics.bat --create --topic adminToUserTopic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+
+
+Now u can start both the microservices and use API's to send and receive the messages
